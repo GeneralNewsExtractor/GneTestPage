@@ -12,6 +12,10 @@ var app = new Vue({
     },
     methods: {
         extract: function (event) {
+            if (this.html.length <= 0) {
+                alert('HTML 不能为空！')
+                return
+            }
             axios.post('/extract', {
                 html: this.html,
                 title_xpath: this.title_xpath,
@@ -19,9 +23,10 @@ var app = new Vue({
                 publish_time_xpath: this.publish_time_xpath,
                 host: this.host,
                 with_body_html: this.with_body_html,
-                noise_node_list:this.noise_node_list
-            }).then(function (response) {
-                    this.extract_result = response.toString()
+                noise_node_list:this.noise_node_list.split('\n')
+            }).then((response) => {
+                    result = JSON.stringify(response.data, null, 2)
+                    app.extract_result = result
                 }).catch(function (error) {
                     console.log(error)
                 })
