@@ -25,7 +25,7 @@ var app = new Vue({
                 with_body_html: this.with_body_html,
                 noise_node_list:this.noise_node_list.split('\n')
             }).then((response) => {
-                    result = JSON.stringify(response.data, null, 2)
+                    result = JSON.stringify(response.data, null, 2).replace('<', '&lt;').replace('>', '&gt;')
                     app.extract_result = result
                 }).catch(function (error) {
                     console.log(error)
