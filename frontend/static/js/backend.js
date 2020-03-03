@@ -20,11 +20,9 @@ var app = new Vue({
                 host: this.host,
                 with_body_html: this.with_body_html,
                 noise_node_list:this.noise_node_list
-            })
-                .then(function (response) {
+            }).then(function (response) {
                     this.extract_result = response.toString()
-                })
-                .catch(function (error) {
+                }).catch(function (error) {
                     console.log(error)
                 })
         }
