@@ -1,83 +1,123 @@
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>GNE 在线测试</title>
-        <link rel="stylesheet" href="static/css/bootstrap.min.css">
-    </head>
-    <body>
-        <div class="container" id="app">
-                            <br />
+<head>
+    <meta charset="UTF-8">
+    <title>GNE 在线测试</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container" id="app">
+    <br/>
 
-            <div class="card">
-                <div class="card-header">
-                    GNE 在线测试系统
+    <div class="card text-center">
+        <div class="card-header">
+            GNE 在线测试系统
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link " v-bind:class="{active: !gnelist}" href="#" v-on:click="switch_to_gne">正文抽取</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" v-bind:class="{active: gnelist}" href="#"
+                       v-on:click="switch_to_gnelist">列表抽取</a>
+                </li>
+            </ul>
+        </div>
+        <template v-if="gnelist">
+            <div class="card-body">
+                <div class="html_box">
+                    <label>请粘贴网页源代码：</label>
+                    <textarea v-model="html" class="form-control" id="raw_html" rows="10"></textarea>
                 </div>
-                <div class="card-body">
-                    <div class="html_box">
-                        <label>请粘贴网页源代码：</label>
-                        <textarea v-model="html" class="form-control" id="raw_html" rows="10"></textarea>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-3">
-                            <label>Title XPath</label>
-                            <input v-model="title_xpath" type="text" class="form-control" id="title_xpath" placeholder="//title/text()">
-                        </div>
-                        <div class="col-3">
-                            <label>Author XPath</label>
-                            <input v-model="author_xpath" type="text" class="form-control" id="author_xpath" placeholder='//div[@class="author"]/text()'>
-                        </div>
-                        <div class="col-3">
-                            <label>Publish Time XPath</label>
-                            <input v-model="publish_time_xpath" type="text" class="form-control" id="publish_time_xpath" placeholder='//div[@class="publish_time"]/text()'>
-                        </div>
-                        <div class="col-3">
-                            <label>Host</label>
-                            <input v-model="host" type="text" class="form-control" id="host" placeholder="https://www.kingname.info">
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-12">
-                             <label for="with_body_html">Noise Node List(一行一个 XPath)</label>
-                             <textarea v-model="noise_node_list" class="form-control" id="noise_node_list" rows="5"></textarea>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-4">
+                <br/>
+                <div class="form-group row">
+                        <label class="col-sm-1 col-form-label">Sample</label>
+                                        <div class="col-9">
 
-                            <div class="form-check">
-                                <input v-model="with_body_html" class="form-check-input" type="checkbox" value="" id="with_body_html">
-                                <label class="form-check-label">With Body Html</label>
-                            </div>
-                        </div>
-                        <div class="col-1">
+                        <input v-model="list_sample" type="text" class="form-control" id="list_sample"
+                               placeholder="//li/div[@class='xxx']">
+                    </div>
+                    <br/>
 
+                    <div class="col-2">
+                        <button v-on:click="extract_list" type="button" class="btn btn-dark">提取</button>
+                    </div>
+                </div>
+
+            </div>
+        </template>
+        <template v-else>
+            <div class="card-body">
+                <div class="html_box">
+                    <label>请粘贴网页源代码：</label>
+                    <textarea v-model="html" class="form-control" id="raw_html" rows="10"></textarea>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-3">
+                        <label>Title XPath</label>
+                        <input v-model="title_xpath" type="text" class="form-control" id="title_xpath"
+                               placeholder="//title/text()">
+                    </div>
+                    <div class="col-3">
+                        <label>Author XPath</label>
+                        <input v-model="author_xpath" type="text" class="form-control" id="author_xpath"
+                               placeholder='//div[@class="author"]/text()'>
+                    </div>
+                    <div class="col-3">
+                        <label>Publish Time XPath</label>
+                        <input v-model="publish_time_xpath" type="text" class="form-control" id="publish_time_xpath"
+                               placeholder='//div[@class="publish_time"]/text()'>
+                    </div>
+                    <div class="col-3">
+                        <label>Host</label>
+                        <input v-model="host" type="text" class="form-control" id="host"
+                               placeholder="https://www.kingname.info">
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-12">
+                        <label for="with_body_html">Noise Node List(一行一个 XPath)</label>
+                        <textarea v-model="noise_node_list" class="form-control" id="noise_node_list"
+                                  rows="5"></textarea>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-4">
+
+                        <div class="form-check">
+                            <input v-model="with_body_html" class="form-check-input" type="checkbox" value=""
+                                   id="with_body_html">
+                            <label class="form-check-label">With Body Html</label>
                         </div>
-                        <div class="col-2">
-                            <button v-on:click="extract" type="button" class="btn btn-dark">提取</button>
-                        </div>
+                    </div>
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-2">
+                        <button v-on:click="extract" type="button" class="btn btn-dark">提取</button>
                     </div>
                 </div>
             </div>
-            <br />
-            <div class="card" v-if="extract_result">
-                <div class="card-header">
-                    提取结果
-                </div>
-                <div class="card-body">
+        </template>
+    </div>
+    <br/>
+    <div class="card" v-if="extract_result">
+        <div class="card-header">
+            提取结果
+        </div>
+        <div class="card-body">
                     <pre>
                         <code>
                             {{ extract_result }}
                         </code>
                     </pre>
-                </div>
-            </div>
-            <br />
         </div>
-    <script src="static/js/vue.js"></script>
-    <script src="static/js/backend.js"></script>
-    <script src="static/js/axios.min.js"></script>
-    </body>
+    </div>
+    <br/>
+</div>
+<script src="static/js/vue.js"></script>
+<script src="static/js/backend.js"></script>
+<script src="static/js/axios.min.js"></script>
+</body>
 </html>

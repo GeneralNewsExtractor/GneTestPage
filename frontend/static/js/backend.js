@@ -8,7 +8,9 @@ var app = new Vue({
         host: '',
         with_body_html: false,
         noise_node_list: [],
-        extract_result: ''
+        extract_result: '',
+        gnelist: false,
+        list_sample: ''
     },
     methods: {
         extract: function (event) {
@@ -35,6 +37,32 @@ var app = new Vue({
                 }).catch(function (error) {
                     console.log(error)
                 })
+        },
+        switch_to_gne: function (event) {
+            this.gnelist = false
+        },
+        switch_to_gnelist: function (event) {
+            this.gnelist = true
+        },
+        extract_list: function () {
+            if (this.html.length <= 0) {
+                alert('HTML 不能为空！')
+                return
+            }
+            if (this.list_sample.length <= 0) {
+                alert('全自动智能提取即将上线，敬请期待。现在请填写列表中任一一项的标题或者 XPath。')
+                return
+            }
+            axios.post('/extract', {
+                html: this.html,
+                sample: this.list_sample,
+            }).then((response) => {
+                result = JSON.stringify(response.data, null, 2)
+                app.extract_result = result
+            }).catch(function (error) {
+                console.log(error)
+            })
         }
+
     }
 })
